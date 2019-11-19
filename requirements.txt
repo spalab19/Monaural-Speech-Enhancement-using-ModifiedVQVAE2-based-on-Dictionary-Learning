@@ -1,0 +1,14 @@
+subprocess
+argparse
+numpy
+seaborn
+matplotlib
+vaex
+itertools
+torch
+random
+wave
+struct
+librosa
+pandas
+mir_eval
