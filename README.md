@@ -47,7 +47,7 @@ bash checkpoint.sh [input_snr] [epoch]
 <img src="loss/enhancement_model.png" width="700">
 </div>
 
-##### Outputs qualitative comparison on the spectrograms of the test speaker
+##### Outputs qualitative comparison on the log/mel spectrograms of the test speaker
 <div align="center">
 <img src="figs/result.png" width="700">
 </div>
