@@ -58,7 +58,7 @@ bash checkpoint.sh [input_snr] [epoch]
 
 ##### Quantitative comparison of the test speakers
 <div align="center">
-<img src="figs/table.png" width="900">
+<img src="figs/table.png" width="700">
 </div>
 
 ##### Sound samples
