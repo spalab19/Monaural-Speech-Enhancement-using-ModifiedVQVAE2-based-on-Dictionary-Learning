@@ -2,6 +2,11 @@
 Model architecture is available in `model.py`.
 
 <div align="center">
+<img src="figs/archit.png" width="520">
+</div>
+
+##### Encoder network architecture
+<div align="center">
 <img src="figs/model.png" width="600">
 </div>
 
