@@ -63,25 +63,25 @@ bash checkpoint.sh [input_snr] [epoch]
 </div>
 
 ##### Sound samples
-##### male speaker (SNR 5dB)
+##### male speaker BPM0 (SNR 5dB)
 - [Clean](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Noisy](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (Proposed)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (FSEGAN)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 
-##### male speaker (SNR 0dB)
+##### male speaker BPM0 (SNR 0dB)
 - [Clean](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Noisy](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (Proposed)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (FSEGAN)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 
-##### female speaker (SNR 5dB)
+##### female speaker MLD0 (SNR 5dB)
 - [Clean](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Noisy](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (Proposed)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (FSEGAN)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 
-##### female speaker (SNR 0dB)
+##### female speaker MLD0 (SNR 0dB)
 - [Clean](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Noisy](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
 - [Enhanced (Proposed)](https://drive.google.com/drive/folders/1GllMBAEhLWdKlmWLGSiN0raKI1YXSFlD)
