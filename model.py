@@ -77,14 +77,33 @@ class Transpose(nn.Module):
     def forward(self, x, dim=[0, 2, 1, 3]):
         return x.permute(*dim)
 
+class Filterencoder(nn.Module):
+    def __init__(self, f_dim, dim):
+        super().__init__()
+        self.block = nn.Sequential(
+            nn.Conv2d(1, dim, (f_dim, 1), (1, 1), (0, 0)),
+            nn.BatchNorm2d(dim),
+            nn.ReLU(True)
+        )
+    def forward(self, x):
+        return self.block(x)
+
+class Filterdecoder(nn.Module):
+    def __init__(self, f_dim, dim):
+        super().__init__()
+        self.block = nn.Sequential(
+            nn.ConvTranspose2d(dim, 1, (f_dim, 1), (1, 1), (0, 0))
+        )
+    def forward(self, x):
+        return self.block(x)
+
+
+# (Input + 2* pad - kernel) / stride +1 = output
 class Encoder(nn.Module):
-    def __init__(self, in_dim, f_dim, dim, stride):
+    def __init__(self, in_dim, dim, stride):
         super().__init__()
         if stride == 4:
             self.block = nn.Sequential(
-                nn.Conv2d(in_dim, dim//2, (f_dim, 1), (1, 1), (0, 0)),
-                nn.BatchNorm2d(dim//2),
-                nn.ReLU(True),
                 Transpose(),
                 nn.Conv2d(in_dim, dim//2, 4, 2, 1),
                 nn.BatchNorm2d(dim//2),
@@ -112,7 +131,7 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, in_dim, out_dim, f_dim, dim, stride):
+    def __init__(self, in_dim, out_dim, dim, stride):
         super().__init__()
         if stride == 4:
             self.block = nn.Sequential(
@@ -126,8 +145,7 @@ class Decoder(nn.Module):
                 nn.ConvTranspose2d(dim//2, out_dim, 4, 2, 1),
                 nn.BatchNorm2d(out_dim),
                 nn.ReLU(True),
-                Transpose(),
-                nn.ConvTranspose2d(dim//2, out_dim, (f_dim, 1), (1, 1), (0, 0))
+                Transpose()
             )
         elif stride == 2:
             self.block = nn.Sequential(
@@ -144,22 +162,29 @@ class Decoder(nn.Module):
 class VQVAE2(nn.Module):
     def __init__(self, f_dim, dim, K, D):
         super(VQVAE2, self).__init__()
-        self.encoder_b = Encoder(1, f_dim, dim, stride=4)
-        self.encoder_t = Encoder(dim, f_dim, dim, stride=2)
+        self.filter_e = Filterencoder(f_dim, dim//2)
+
+        self.encoder_b = Encoder(1, dim, stride=4)
+        self.encoder_t = Encoder(dim, dim, stride=2)
 
         self.pre_quantize_conv_t = nn.Conv2d(dim, D, 1, 1, 0)
         self.quantize_t = VQEmbedding(K, D)
 
-        self.decoder_t = Decoder(D, D, f_dim, dim, stride=2)
+        self.decoder_t = Decoder(D, D, dim, stride=2)
 
         self.pre_quantize_conv_b = nn.Conv2d(D+dim, D, 1, 1, 0)
         self.quantize_b = VQEmbedding(K, D)
 
         self.upsample_t = nn.ConvTranspose2d(D, D, 4, 2, 1)
-        self.decoder = Decoder(D+D, 1, f_dim, dim, stride=4)
+        self.decoder = Decoder(D+D, 1, dim, stride=4)
+
+        self.decoder_b = Decoder(D, 1, dim, stride=4)
+
+        self.filter_d = Filterdecoder(f_dim, dim)
 
     def forward(self, x):
-        z_e_b = self.encoder_b(x)
+        x_f = self.filter_e(x)
+        z_e_b = self.encoder_b(x_f)
         z_e_t = self.encoder_t(z_e_b)
 
         z_q_t = self.pre_quantize_conv_t(z_e_t)
@@ -175,5 +200,10 @@ class VQVAE2(nn.Module):
 
         z_q_x = self.upsample_t(z_q_t)
         z_q_x = torch.cat([z_q_x, z_q_b], 1)
-        x_tilde = self.decoder(z_q_x)
+        x_b = self.decoder(z_q_x)
+
+        x_c = torch.cat([x_f, x_b], 1)
+
+        x_tilde = self.filter_d(x_c)
+
         return x_tilde, latent_loss_t+latent_loss_b
